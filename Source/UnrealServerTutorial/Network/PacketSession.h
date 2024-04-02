@@ -11,10 +11,15 @@ class UNREALSERVERTUTORIAL_API PacketSession : public TSharedFromThis<PacketSess
 {
 public:
 	class FSocket* Socket;
+	TQueue<TArray<uint8>> RecvPacketQueue;
+	TSharedPtr<class RecvWorker> RecvWorkerThread;
 public:
 	PacketSession(class FSocket* Socket);
 	~PacketSession();
 public:
 	void Run();
 	void Disconnect();
+public:
+	UFUNCTION(BlueprintCallable)
+	void HandleRecvPackets();
 };

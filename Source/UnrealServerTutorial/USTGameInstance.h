@@ -14,14 +14,17 @@ class UNREALSERVERTUTORIAL_API UUSTGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 public:
-	UFUNCTION(BlueprintCallable)
-	void ConnectToServer();
-	UFUNCTION(BlueprintCallable)
-	void disconnectFromServer();
-public:
 	class FSocket* Socket = nullptr;
 	FString IpAddress = TEXT("127.0.0.1");
 	int16 Port = 27015;
+	TSharedPtr<class PacketSession> ServerSession;
+public:
+	UFUNCTION(BlueprintCallable)
+	void ConnectToServer();
+	UFUNCTION(BlueprintCallable)
+	void DisconnectFromServer();
+	UFUNCTION(BlueprintCallable)
+	void HandleRecvPackets();
 
 	
 };
