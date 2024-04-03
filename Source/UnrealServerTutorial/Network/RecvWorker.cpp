@@ -20,7 +20,7 @@ RecvWorker::~RecvWorker()
 
 bool RecvWorker::Init()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Network Worker thread Init")));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Worker thread Init")));
 	return true;
 }
 

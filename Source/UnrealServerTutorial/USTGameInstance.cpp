@@ -5,7 +5,7 @@
 #include "Common/TcpSocketBuilder.h"
 #include "Serialization/ArrayWriter.h"
 #include "SocketSubsystem.h"
-#include "Network/PacketSession.h"	// 추가
+#include "Network/PacketSession.h"	
 
 void UUSTGameInstance::ConnectToServer()
 {
@@ -26,9 +26,7 @@ void UUSTGameInstance::ConnectToServer()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Connection Success")));
 
-		//PacketSession 생성 Socket 넘겨줌
 		ServerSession = MakeShared<PacketSession>(Socket);
-		//Run 실행
 		ServerSession->Run();
 	}
 	else
@@ -49,11 +47,18 @@ void UUSTGameInstance::DisconnectFromServer()
 
 void UUSTGameInstance::HandleRecvPackets()
 {	
-	//소켓이나 서버 세션이 없는 경우 함수 종료
+
 	if (Socket == nullptr || ServerSession == nullptr)
 		return;
 
-	//서버 세션을 통해 수신된 패킷을 처리
 	ServerSession->HandleRecvPackets();
+}
+
+void UUSTGameInstance::SendPacket(TSharedPtr<class SendBuffer> SendBuffer)
+{
+	if (Socket == nullptr || ServerSession == nullptr)
+		return;
+
+	ServerSession->SendPacket(SendBuffer);
 }
 

@@ -26,7 +26,7 @@ class UNREALSERVERTUTORIAL_API NetworkWorker : public FRunnable
 protected:
 	FRunnableThread* Thread = nullptr;
 	bool Running = true;
-	FSocket* Socket;
+	FSocket* Socket = nullptr;
 	//PacketSession들구 있는 포인터
 	TWeakPtr<class PacketSession> SessionRef;
 };

@@ -26,5 +26,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void HandleRecvPackets();
 
+	void SendPacket(TSharedPtr<class SendBuffer> SendBuffer);
+
 	
 };
