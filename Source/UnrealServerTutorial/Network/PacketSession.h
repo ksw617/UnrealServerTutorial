@@ -10,7 +10,7 @@
 class UNREALSERVERTUTORIAL_API PacketSession : public TSharedFromThis<PacketSession>
 {
 public:
-	class FSocket* Socket;
+	class FSocket* Socket = nullptr;
 	TQueue<TArray<uint8>> RecvPacketQueue;
 	TQueue<TSharedPtr<class SendBuffer>> SendPacketQueue;
 	TSharedPtr<class RecvWorker> RecvWorkerThread;

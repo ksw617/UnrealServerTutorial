@@ -2,9 +2,14 @@
 
 
 #include "Network/PacketSession.h"
-#include "RecvWorker.h"
-#include "SendWorker.h"
+#include "Network/NetworkWorker.h"
 #include "ServerPacketHandler.h"
+
+#include "Sockets.h"
+#include "Common/TcpSocketBuilder.h"
+#include "Serialization/ArrayWriter.h"
+#include "SocketSubsystem.h"
+#include "Network/PacketSession.h"	
 
 PacketSession::PacketSession(FSocket* Socket) : Socket(Socket)
 {
