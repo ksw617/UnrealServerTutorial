@@ -6,20 +6,28 @@
 #include "Network/PacketSession.h"
 #include "Protocol/Protocol.pb.h"
 
-enum : uint16
+enum :uint16
 {
 	C_LOGIN = 1001,
 	S_LOGIN = 1002,
-	C_ENTER_ROOM = 1003,
-	S_ENTER_ROOM = 1004,
-	C_CHAT = 1005,
-	S_CHAT = 1006,
+	C_ENTER_GAME = 1003,
+	S_ENTER_GAME = 1004,
+	C_MOVE = 1005,
+	S_MOVE = 1006,
+	C_LEAVE_GAME = 1007,
+	S_LEAVE_GAME = 1008,
+	S_SPAWN = 1009,
+	S_DESPAWN = 1010,
+
 };
 
 bool Handle_INVALID(TSharedPtr<PacketSession>& session, BYTE* buffer, int len);
 bool Handle_S_LOGIN(TSharedPtr<PacketSession>& session, Protocol::S_LOGIN& packet);
-bool Handle_S_ENTER_ROOM(TSharedPtr<PacketSession>& session, Protocol::S_ENTER_ROOM& packet);
-bool Handle_S_CHAT(TSharedPtr<PacketSession>& session, Protocol::S_CHAT& packet);
+bool Handle_S_ENTER_GAME(TSharedPtr<PacketSession>& session, Protocol::S_ENTER_GAME& packet);
+bool Handle_S_MOVE(TSharedPtr<PacketSession>& session, Protocol::S_MOVE& packet);
+bool Handle_S_LEAVE_GAME(TSharedPtr<PacketSession>& session, Protocol::S_LEAVE_GAME& packet);
+bool Handle_S_SPAWN(TSharedPtr<PacketSession>& session, Protocol::S_SPAWN& packet);
+bool Handle_S_DESPAWN(TSharedPtr<PacketSession>& session, Protocol::S_DESPAWN& packet);
 
 class ServerPacketHandler  : public PacketHandler
 {
@@ -34,8 +42,9 @@ public:
 	static bool HandlePacket(TSharedPtr<PacketSession>& session, BYTE* buffer, int len);
 public:
 	static TSharedPtr<SendBuffer> MakeSendPacket(Protocol::C_LOGIN& packet) { return MakeSendBuffer(packet, C_LOGIN); }
-	static TSharedPtr<SendBuffer> MakeSendPacket(Protocol::C_ENTER_ROOM& packet) { return MakeSendBuffer(packet, C_ENTER_ROOM); }
-	static TSharedPtr<SendBuffer> MakeSendPacket(Protocol::C_CHAT& packet) { return MakeSendBuffer(packet, C_CHAT); }
+	static TSharedPtr<SendBuffer> MakeSendPacket(Protocol::C_ENTER_GAME& packet) { return MakeSendBuffer(packet, C_ENTER_GAME); }
+	static TSharedPtr<SendBuffer> MakeSendPacket(Protocol::C_MOVE& packet) { return MakeSendBuffer(packet, C_MOVE); }
+	static TSharedPtr<SendBuffer> MakeSendPacket(Protocol::C_LEAVE_GAME& packet) { return MakeSendBuffer(packet, C_LEAVE_GAME); }
 protected:
 	template<typename PacketType, typename ProcessFunc>
 	static bool HandlePacket(ProcessFunc func, TSharedPtr<PacketSession>& session, BYTE* buffer, int len)

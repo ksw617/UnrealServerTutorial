@@ -25,10 +25,7 @@ void AMyActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	Protocol::C_CHAT Msg;
-	Msg.set_msg("Hello world");
-	TSharedPtr<SendBuffer> SendBuffer = ServerPacketHandler::MakeSendPacket(Msg);
-	Cast<UUSTGameInstance>(GetGameInstance())->SendPacket(SendBuffer);
+	
 
 }
 

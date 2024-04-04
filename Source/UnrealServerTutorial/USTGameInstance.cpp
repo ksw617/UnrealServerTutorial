@@ -6,6 +6,8 @@
 #include "Serialization/ArrayWriter.h"
 #include "SocketSubsystem.h"
 #include "Network/PacketSession.h"	
+#include "Protocol/Protocol.pb.h"
+#include "ServerPacketHandler.h"
 
 void UUSTGameInstance::ConnectToServer()
 {
@@ -28,6 +30,15 @@ void UUSTGameInstance::ConnectToServer()
 
 		ServerSession = MakeShared<PacketSession>(Socket);
 		ServerSession->Run();
+
+
+		//로그인 패킷 보내기
+		{
+			Protocol::C_LOGIN Packet;
+			TSharedPtr<SendBuffer> SendBuffer = ServerPacketHandler::MakeSendPacket(Packet);
+			SendPacket(SendBuffer);
+			
+		}
 	}
 	else
 	{
