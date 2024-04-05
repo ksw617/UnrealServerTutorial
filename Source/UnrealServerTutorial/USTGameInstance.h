@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Protocol/Protocol.pb.h"
 #include "USTGameInstance.generated.h"
 
 /**
@@ -19,6 +20,10 @@ public:
 	int16 Port = 27015;
 	TSharedPtr<class PacketSession> ServerSession;
 public:
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> PlayerClass;
+	TMap<uint64, AActor*> Players;
+public:
 	UFUNCTION(BlueprintCallable)
 	void ConnectToServer();
 	UFUNCTION(BlueprintCallable)
@@ -27,6 +32,10 @@ public:
 	void HandleRecvPackets();
 
 	void SendPacket(TSharedPtr<class SendBuffer> SendBuffer);
+public:
+	void HandleSpawn(const Protocol::PlayerInfo& PlayerInfo);
+	void HandleSpawn(const Protocol::S_ENTER_GAME& EnterGamePacket);
+	void HandleSpawn(const Protocol::S_SPAWN& SpawnPacket);
 
 	
 };

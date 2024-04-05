@@ -58,7 +58,6 @@ void UUSTGameInstance::DisconnectFromServer()
 
 void UUSTGameInstance::HandleRecvPackets()
 {	
-
 	if (Socket == nullptr || ServerSession == nullptr)
 		return;
 
@@ -71,5 +70,37 @@ void UUSTGameInstance::SendPacket(TSharedPtr<class SendBuffer> SendBuffer)
 		return;
 
 	ServerSession->SendPacket(SendBuffer);
+}
+
+void UUSTGameInstance::HandleSpawn(const Protocol::PlayerInfo& PlayerInfo)
+{
+	if (Socket == nullptr || ServerSession == nullptr)
+		return;
+
+	auto* World = GetWorld();
+	if (World == nullptr)
+		return;
+
+	const uint64 PlayerID = PlayerInfo.id();
+	if (Players.Find(PlayerID) != nullptr)
+		return;
+
+	FVector SpawnLocation(PlayerInfo.x(), PlayerInfo.y(), PlayerInfo.z());
+	AActor* Actor = World->SpawnActor(PlayerClass, &SpawnLocation);
+
+	Players.Add(PlayerInfo.id(), Actor);
+}
+
+void UUSTGameInstance::HandleSpawn(const Protocol::S_ENTER_GAME& EnterGamePacket)
+{
+	HandleSpawn(EnterGamePacket.info());
+}
+
+void UUSTGameInstance::HandleSpawn(const Protocol::S_SPAWN& SpawnPacket)
+{
+	for (auto& Player : SpawnPacket.players())
+	{
+		HandleSpawn(Player);
+	}
 }
 

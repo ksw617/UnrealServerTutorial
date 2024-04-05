@@ -46,6 +46,7 @@ bool Handle_INVALID(TSharedPtr<PacketSession>& session, BYTE* buffer, int len)
 
 bool Handle_S_LOGIN(TSharedPtr<PacketSession>& session, Protocol::S_LOGIN& packet)
 {
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("S_LOGIN")));
 
     for (auto& player : packet.myplayers())
     {
@@ -53,23 +54,30 @@ bool Handle_S_LOGIN(TSharedPtr<PacketSession>& session, Protocol::S_LOGIN& packe
         //Todo
         //Show Players
     }
-
-    //로비에서 캐릭터 선택
+   
     Protocol::C_ENTER_GAME EnterGamePacket;
-
+   
     EnterGamePacket.set_playerindex(1);
-
+   
     TSharedPtr<SendBuffer> SendBuffer = ServerPacketHandler::MakeSendPacket(EnterGamePacket);
-    //session있을 경우
-    session->SendPacket(SendBuffer);
-    //session없을 경우
-    //USETGameInstance SendPacket으로 보내면 됨
+    //session->SendPacket(SendBuffer);
+
+    Cast<UUSTGameInstance>(GWorld->GetGameInstance())->SendPacket(SendBuffer);
+
     return true;
 }
 
 bool Handle_S_ENTER_GAME(TSharedPtr<PacketSession>& session, Protocol::S_ENTER_GAME& packet)
 {
-    return false;
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("S_ENTER_GAME")));
+    
+    if (auto* GameInstance = Cast<UUSTGameInstance>(GWorld->GetGameInstance()))
+    {
+        GameInstance->HandleSpawn(packet);
+    }
+  
+
+    return true;
 }
 
 bool Handle_S_MOVE(TSharedPtr<PacketSession>& session, Protocol::S_MOVE& packet)
@@ -84,7 +92,11 @@ bool Handle_S_LEAVE_GAME(TSharedPtr<PacketSession>& session, Protocol::S_LEAVE_G
 
 bool Handle_S_SPAWN(TSharedPtr<PacketSession>& session, Protocol::S_SPAWN& packet)
 {
-    return false;
+    if (auto* GameInstatance = Cast<UUSTGameInstance>(GWorld->GetGameInstance()))
+    {
+        GameInstatance->HandleSpawn(packet);
+    }
+    return true;
 }
 
 bool Handle_S_DESPAWN(TSharedPtr<PacketSession>& session, Protocol::S_DESPAWN& packet)

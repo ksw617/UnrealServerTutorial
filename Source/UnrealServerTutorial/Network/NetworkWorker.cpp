@@ -28,8 +28,6 @@ bool RecvWorker::Init()
 uint32 RecvWorker::Run()
 {
 
-
-
 	while (Running)
 	{
 		TArray<uint8> Packet;
@@ -37,7 +35,7 @@ uint32 RecvWorker::Run()
 		{
 			if (TSharedPtr<PacketSession> Session = SessionRef.Pin())
 			{
-				Session->RecvPacketQueue.Dequeue(Packet);
+				Session->RecvPacketQueue.Enqueue(Packet);
 			}
 		}
 	}
